@@ -1,0 +1,10 @@
+{
+  "name": "PostCraft AI",
+  "short_name": "PostCraft",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0F0F1A",
+  "theme_color": "#6366F1",
+  "description": "LinkedIn Post Generator powered by AI",
+  "orientation": "portrait-primary"
+}

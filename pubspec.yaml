@@ -1,0 +1,29 @@
+name: postcraft_ai
+description: PostCraft AI — LinkedIn Post Generator with 6 writing styles, hooks, hashtags, and templates.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+  flutter: '>=3.16.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.0
+  shared_preferences: ^2.2.2
+  provider: ^6.1.1
+  google_fonts: ^6.1.0
+  flutter_animate: ^4.3.0
+  share_plus: ^7.2.1
+  cupertino_icons: ^1.0.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
