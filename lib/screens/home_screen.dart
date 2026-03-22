@@ -9,6 +9,8 @@ import 'package:postcraft_ai/screens/templates_screen.dart';
 import 'package:postcraft_ai/screens/favorites_screen.dart';
 import 'package:postcraft_ai/screens/settings_screen.dart';
 import 'package:postcraft_ai/screens/tone_screen.dart';
+import '../widgets/auth_wall.dart';
+import '../services/auth_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,6 +21,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
+  final AuthService _authService = AuthService();
+  bool _showAuthWall = false;
 
   final List<Widget> _screens = [
     const _HomeContent(),
@@ -28,11 +32,31 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _checkAuth();
+  }
+
+  Future<void> _checkAuth() async {
+    final needsAuth = await _authService.needsAuth();
+    if (mounted) setState(() => _showAuthWall = needsAuth);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens,
+      body: Stack(
+        children: [
+          IndexedStack(
+            index: _currentIndex,
+            children: _screens,
+          ),
+          if (_showAuthWall)
+            AuthWall(
+              authService: _authService,
+              onSignedIn: () => setState(() => _showAuthWall = false),
+            ),
+        ],
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -46,7 +70,11 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
-          onTap: (index) => setState(() => _currentIndex = index),
+          onTap: (index) async {
+            await _authService.incrementUsage();
+            await _checkAuth();
+            if (!_showAuthWall) setState(() => _currentIndex = index);
+          },
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home_rounded),
